@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-black text-white font-sans antialiased">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>xplo Jailbreak</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #000000;
+      color: #ffffff;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .glass-card {
+      background: rgba(18, 18, 20, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glow-effect {
+      box-shadow: 0 0 40px -10px rgba(168, 85, 247, 0.3);
+    }
+
+    .glow-success {
+      box-shadow: 0 0 40px -10px rgba(34, 197, 94, 0.35);
+    }
+
+    /* Shimmer progress effect */
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    .shimmer-bar::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      transform: translateX(-100%);
+      background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.25) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      animation: shimmer 1.5s infinite;
+    }
+
+    .animate-scale-in {
+      animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes scaleIn {
+      0% { opacity: 0; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col justify-between items-center p-4 sm:p-6 select-none relative overflow-x-hidden">
+
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div id="bgGlow1" class="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] transition-all duration-700"></div>
+    <div id="bgGlow2" class="absolute -bottom-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-indigo-600/15 rounded-full blur-[100px] transition-all duration-700"></div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="relative z-10 w-full max-w-md mx-auto my-auto flex flex-col justify-between space-y-8 py-6">
+    
+    <header class="flex flex-col items-center text-center space-y-3 pt-4">
+      <!-- Minimal xplo Logo Icon -->
+      <div id="appLogo" class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-violet-500 p-0.5 shadow-xl shadow-purple-900/30 flex items-center justify-center transition-transform duration-500 hover:scale-105">
+        <div class="w-full h-full bg-neutral-950 rounded-[22px] flex items-center justify-center relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-tr from-purple-600/20 to-transparent"></div>
+          <span class="text-3xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-violet-300 to-indigo-300">
+            xplo
+          </span>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <h1 class="text-2xl font-extrabold tracking-tight text-white flex items-center justify-center gap-2">
+          xplo
+        </h1>
+      </div>
+    </header>
+
+    <section class="glass-card rounded-3xl p-6 shadow-2xl space-y-6 border border-neutral-800/80">
+      
+      <!-- Status Box -->
+      <div id="statusCard" class="text-center py-2 space-y-1">
+        <span id="statusLabel" class="text-xs uppercase tracking-widest font-bold text-neutral-500">
+          Status
+        </span>
+        <div id="statusText" class="text-lg font-bold text-neutral-200">
+          Ready
+        </div>
+      </div>
+
+      <div id="progressSection" class="hidden space-y-2">
+        <div class="flex justify-between items-center text-xs font-mono font-medium">
+          <span id="progressStepText" class="text-purple-400">Running exploit...</span>
+          <span id="progressPercent" class="text-neutral-400">0%</span>
+        </div>
+        
+        <div class="w-full h-3 bg-neutral-900 rounded-full overflow-hidden p-0.5 border border-neutral-800 relative">
+          <div id="progressBar" class="h-full w-0 bg-gradient-to-r from-purple-500 via-violet-500 to-indigo-500 rounded-full transition-all duration-100 ease-out relative overflow-hidden shimmer-bar"></div>
+        </div>
+      </div>
+
+      <button id="jailbreakBtn" onclick="startExploitProcess()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 active:scale-[0.98] text-white font-bold text-base shadow-lg shadow-purple-600/25 transition-all duration-200 flex items-center justify-center space-x-2">
+        <i class="fa-solid fa-bolt text-sm"></i>
+        <span>Jailbreak</span>
+      </button>
+
+      <div id="successSection" class="hidden flex-col items-center space-y-4 animate-scale-in">
+        <div class="flex items-center space-x-2 text-emerald-400 font-bold text-lg">
+          <div class="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-check text-emerald-400"></i>
+          </div>
+          <span>Success!</span>
+        </div>
+
+        <p class="text-xs text-neutral-400 text-center leading-relaxed">
+          The exploit executed successfully. You can now proceed to install NekoUtil.
+        </p>
+
+        <!-- Install NekoUtil Direct Link -->
+        <a id="installBtn" 
+           href="https://nekojb.com/source/nekojb/nekoutil/secure/nekoUtil.mobileconfig" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-extrabold text-base shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all duration-200 flex items-center justify-center space-x-2 glow-success">
+          <i class="fa-solid fa-download text-sm"></i>
+          <span>Install NekoUtil</span>
+        </a>
+
+        <!-- Re-run option -->
+        <button onclick="resetUI()" class="text-xs text-neutral-500 hover:text-neutral-300 pt-2 transition font-medium">
+          Re-run Exploit
+        </button>
+      </div>
+
+    </section>
+
+    <footer class="text-center space-y-1 text-neutral-600">
+      <p class="text-xs font-semibold tracking-wider">xplo</p>
+    </footer>
+
+  </main>
+
+  <script>
+    /* Audio Feedback Generator (Web Audio API - self contained) */
+    function playBeep(freq = 520, type = 'sine', duration = 0.08) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.06, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playSuccessChime() {
+      setTimeout(() => playBeep(523.25, 'sine', 0.1), 0);
+      setTimeout(() => playBeep(659.25, 'sine', 0.1), 80);
+      setTimeout(() => playBeep(783.99, 'sine', 0.25), 160);
+    }
+
+    let isRunning = false;
+
+    /* Fast Exploit Sequence */
+    const steps = [
+      { pct: 15, label: "Finding kernel offsets..." },
+      { pct: 38, label: "Bypassing sandbox..." },
+      { pct: 65, label: "Elevating privileges..." },
+      { pct: 88, label: "Finalizing payload..." },
+      { pct: 100, label: "Complete!" }
+    ];
+
+    function startExploitProcess() {
+      if (isRunning) return;
+      isRunning = true;
+
+      playBeep(440, 'sine', 0.08);
+
+      const jailbreakBtn = document.getElementById('jailbreakBtn');
+      const progressSection = document.getElementById('progressSection');
+      const progressBar = document.getElementById('progressBar');
+      const progressPercent = document.getElementById('progressPercent');
+      const progressStepText = document.getElementById('progressStepText');
+      const statusText = document.getElementById('statusText');
+
+      // Hide main trigger button, display status & progress bar
+      jailbreakBtn.classList.add('hidden');
+      progressSection.classList.remove('hidden');
+      statusText.textContent = "Exploiting...";
+      statusText.className = "text-lg font-bold text-purple-400 animate-pulse";
+
+      let stepIdx = 0;
+
+      // Fast execution timer loop
+      const interval = setInterval(() => {
+        if (stepIdx >= steps.length) {
+          clearInterval(interval);
+          finishExploit();
+          return;
+        }
+
+        const step = steps[stepIdx];
+        progressBar.style.width = step.pct + '%';
+        progressPercent.textContent = step.pct + '%';
+        progressStepText.textContent = step.label;
+
+        playBeep(260 + step.pct * 5, 'sine', 0.03);
+
+        stepIdx++;
+      }, 250);
+    }
+
+    function finishExploit() {
+      const progressSection = document.getElementById('progressSection');
+      const successSection = document.getElementById('successSection');
+      const statusText = document.getElementById('statusText');
+      const statusLabel = document.getElementById('statusLabel');
+      const bgGlow1 = document.getElementById('bgGlow1');
+      const bgGlow2 = document.getElementById('bgGlow2');
+
+      playSuccessChime();
+
+      // Shift glow colors to emerald green
+      bgGlow1.className = "absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-600/20 rounded-full blur-[100px] transition-all duration-700";
+      bgGlow2.className = "absolute -bottom-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-teal-600/15 rounded-full blur-[100px] transition-all duration-700";
+
+      statusLabel.textContent = "Result";
+      statusText.textContent = "Success";
+      statusText.className = "text-lg font-bold text-emerald-400";
+
+      progressSection.classList.add('hidden');
+      successSection.classList.remove('hidden');
+      successSection.classList.add('flex');
+    }
+
+    function resetUI() {
+      playBeep(350, 'sine', 0.05);
+
+      const jailbreakBtn = document.getElementById('jailbreakBtn');
+      const progressSection = document.getElementById('progressSection');
+      const successSection = document.getElementById('successSection');
+      const progressBar = document.getElementById('progressBar');
+      const statusText = document.getElementById('statusText');
+      const statusLabel = document.getElementById('statusLabel');
+      const bgGlow1 = document.getElementById('bgGlow1');
+      const bgGlow2 = document.getElementById('bgGlow2');
+
+      isRunning = false;
+
+      successSection.classList.add('hidden');
+      successSection.classList.remove('flex');
+      progressSection.classList.add('hidden');
+      jailbreakBtn.classList.remove('hidden');
+
+      progressBar.style.width = '0%';
+
+      statusLabel.textContent = "Status";
+      statusText.textContent = "Ready";
+      statusText.className = "text-lg font-bold text-neutral-200";
+
+      bgGlow1.className = "absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] transition-all duration-700";
+      bgGlow2.className = "absolute -bottom-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-indigo-600/15 rounded-full blur-[100px] transition-all duration-700";
+    }
+  </script>
+</body>
+</html>
